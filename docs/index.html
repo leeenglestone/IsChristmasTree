@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IsChristmasTree.com</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/basic.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" href="/">IsChristmasTree.com</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/">Home</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+
+            <div class="text-center">
+                
+                <h1 class="display-4" title="Is Christmas Tree">
+                    🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳<br/>
+                    🌴🌳🎄 IsChristmasTree? 🎄🌳🌴<br/>
+                    🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄
+                </h1>
+                <br/>
+                <p>
+                    This page sends an image to an ImageClassification model built on <a href="https://customvision.ai">customvision.ai</a>.
+                </p>
+                <p>Follow me on Twitter (<a href="https://twitter.com/LeeEnglestone">@LeeEnglestone</a>) for more
+                    information.</p>
+
+                <input type='file' accept='image/*' onchange='openFile(event)' />
+                <br /><br/>
+                <img id='output' style="max-width:500px; max-height: 500px;" style="display:none;" />
+
+                <br />
+                <br />
+
+                <div id="isChristmasTree" class="alert alert-success" role="alert" style="display:none;">
+                    IsChristmasTree!
+                </div>
+
+                <div id="isRegularTree" class="alert alert-danger" role="alert" style="display:none;">
+                    IsRegularTree!
+                </div>
+               
+                <br />
+                <p>The code is available on GitHub at <a href="https://github.com/leeenglestone/IsChristmasTree">https://github.com/leeenglestone/IsChristmasTree</a></p>
+                <br />
+                <hr />
+
+                <h2 class="display-5">You may be interested in some of my other websites</h2>
+                <br/>
+                <div class="container">
+                    <div class="row">
+                      <div class="col">
+                        <a href="https://VisualStudioTips.co.uk">VisualStudioTips.co.uk</a>
+                      </div>
+                      <div class="col">
+                        <a href="https://WindowsTerminalTips.com">WindowsTerminalTips.com</a>
+                      </div>
+                      <div class="col">
+                        <a href="https://XamarinArkit.com">XamarinARKit.com</a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <a href="https://ExpressionDesign4.com">ExpressionDesign4.com</a>
+                      </div>
+                      <div class="col">
+                        <a href="https://Start-Coding.com">Start-Coding.com</a>
+                      </div>
+                      <div class="col">
+                        <a href="https://HackathonTips.com">HackathonTips.com</a>
+                      </div>
+                    </div>
+                  </div>
+
+            </div>
+            
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - IsChristmasTree.com
+        </div>
+    </footer>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>    
+
+    <script type="text/javascript">
+        var openFile = function(file) {
+            var input = file.target;
+
+            var reader = new FileReader();
+            reader.onload = function(){
+                var dataURL = reader.result;      
+
+                $('#output').attr('src', dataURL).fadeIn();
+
+                var parts = dataURL.split(';base64,');
+                var contentType = parts[0].split(':')[1];
+                var raw = window.atob(parts[1]);
+                var rawLength = raw.length;
+
+                var uInt8Array = new Uint8Array(rawLength);
+
+                for (var i = 0; i < rawLength; ++i) {
+                    uInt8Array[i] = raw.charCodeAt(i);
+                }
+
+                var imgContent = new Blob([uInt8Array], { type: contentType });
+                
+                $.ajax({
+            
+                    url: "<Enter Prediction Url>",
+                    beforeSend: function(xhrObj){
+                        
+                        xhrObj.setRequestHeader("Prediction-Key","<Enter Prediction Key>");
+                        xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+
+                        $('#isChristmasTree').fadeOut();
+                        $('#isRegularTree').fadeOut();
+
+                    },
+                    type: "POST",
+                    
+                    data: imgContent,
+                    processData: false
+                })
+                .done(function(data) {
+                    
+                    console.log(data);
+
+                    var prediction1Name = data.predictions[0].tagName;
+                    var prediction2Name = data.predictions[1].tagName;
+
+                    var prediction1Probability = data.predictions[0].probability * 100;
+                    var prediction2Probability = data.predictions[1].probability * 100;
+
+                    if(prediction1Probability > 0.50 && prediction1Name === "ChristmasTree")
+                    {                    
+                        $('#isChristmasTree').html('IsChristmasTree! (' + prediction1Probability.toFixed(2) + '%)').fadeIn();
+                    }
+                    else{
+                        $('#isRegularTree').html('IsRegularTree! (' + prediction1Probability.toFixed(2) + '%)').fadeIn();
+                    }
+                })
+                .fail(function() {
+                    alert("error");
+                });
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        };
+    </script>
+
+</body>
+
+</html>
