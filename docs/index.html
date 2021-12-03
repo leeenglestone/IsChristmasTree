@@ -33,21 +33,22 @@
         <main role="main" class="pb-3">
 
             <div class="text-center">
-                
+
                 <h1 class="display-4" title="Is Christmas Tree">
-                    🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳<br/>
-                    🌴🌳🎄 IsChristmasTree? 🎄🌳🌴<br/>
+                    🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳<br />
+                    🌴🌳🎄 IsChristmasTree? 🎄🌳🌴<br />
                     🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄🌴🌳🎄
                 </h1>
-                <br/>
+                <br />
                 <p>
-                    This page sends an image to an ImageClassification model built on <a href="https://customvision.ai">customvision.ai</a>.
+                    This page sends an image to an ImageClassification model built on <a
+                        href="https://customvision.ai">customvision.ai</a>.
                 </p>
                 <p>Follow me on Twitter (<a href="https://twitter.com/LeeEnglestone">@LeeEnglestone</a>) for more
                     information.</p>
 
                 <input type='file' accept='image/*' onchange='openFile(event)' />
-                <br /><br/>
+                <br /><br />
                 <img id='output' style="max-width:500px; max-height: 500px;" style="display:none;" />
 
                 <br />
@@ -60,41 +61,43 @@
                 <div id="isRegularTree" class="alert alert-danger" role="alert" style="display:none;">
                     IsRegularTree!
                 </div>
-               
+
                 <br />
-                <p>The code is available on GitHub at <a href="https://github.com/leeenglestone/IsChristmasTree">https://github.com/leeenglestone/IsChristmasTree</a></p>
+                <p>The code is available on GitHub at <a
+                        href="https://github.com/leeenglestone/IsChristmasTree">https://github.com/leeenglestone/IsChristmasTree</a>
+                </p>
                 <br />
                 <hr />
 
                 <h2 class="display-5">You may be interested in some of my other websites</h2>
-                <br/>
+                <br />
                 <div class="container">
                     <div class="row">
-                      <div class="col">
-                        <a href="https://VisualStudioTips.co.uk">VisualStudioTips.co.uk</a>
-                      </div>
-                      <div class="col">
-                        <a href="https://WindowsTerminalTips.com">WindowsTerminalTips.com</a>
-                      </div>
-                      <div class="col">
-                        <a href="https://XamarinArkit.com">XamarinARKit.com</a>
-                      </div>
+                        <div class="col">
+                            <a href="https://VisualStudioTips.co.uk">VisualStudioTips.co.uk</a>
+                        </div>
+                        <div class="col">
+                            <a href="https://WindowsTerminalTips.com">WindowsTerminalTips.com</a>
+                        </div>
+                        <div class="col">
+                            <a href="https://XamarinArkit.com">XamarinARKit.com</a>
+                        </div>
                     </div>
                     <div class="row">
-                      <div class="col">
-                        <a href="https://ExpressionDesign4.com">ExpressionDesign4.com</a>
-                      </div>
-                      <div class="col">
-                        <a href="https://Start-Coding.com">Start-Coding.com</a>
-                      </div>
-                      <div class="col">
-                        <a href="https://HackathonTips.com">HackathonTips.com</a>
-                      </div>
+                        <div class="col">
+                            <a href="https://ExpressionDesign4.com">ExpressionDesign4.com</a>
+                        </div>
+                        <div class="col">
+                            <a href="https://Start-Coding.com">Start-Coding.com</a>
+                        </div>
+                        <div class="col">
+                            <a href="https://HackathonTips.com">HackathonTips.com</a>
+                        </div>
                     </div>
-                  </div>
+                </div>
 
             </div>
-            
+
         </main>
     </div>
 
@@ -104,15 +107,15 @@
         </div>
     </footer>
     <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>    
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="text/javascript">
-        var openFile = function(file) {
+        var openFile = function (file) {
             var input = file.target;
 
             var reader = new FileReader();
-            reader.onload = function(){
-                var dataURL = reader.result;      
+            reader.onload = function () {
+                var dataURL = reader.result;
 
                 $('#output').attr('src', dataURL).fadeIn();
 
@@ -128,45 +131,42 @@
                 }
 
                 var imgContent = new Blob([uInt8Array], { type: contentType });
-                
+
                 $.ajax({
-            
-                    url: "<Enter Prediction Url>",
-                    beforeSend: function(xhrObj){
-                        
-                        xhrObj.setRequestHeader("Prediction-Key","<Enter Prediction Key>");
-                        xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+                    url: "https://uksouth.api.cognitive.microsoft.com/customvision/v3.0/Prediction/dce64d1e-a96a-4e47-b177-3da5d92cd7d5/classify/iterations/Iteration1/image",
+                    beforeSend: function (xhrObj) {
+
+                        xhrObj.setRequestHeader("Prediction-Key", "527e3bf376794511a5c02b7b43754cc4");
+                        xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
 
                         $('#isChristmasTree').fadeOut();
                         $('#isRegularTree').fadeOut();
-
                     },
                     type: "POST",
-                    
+
                     data: imgContent,
                     processData: false
                 })
-                .done(function(data) {
-                    
-                    console.log(data);
+                    .done(function (data) {
 
-                    var prediction1Name = data.predictions[0].tagName;
-                    var prediction2Name = data.predictions[1].tagName;
+                        console.log(data);
 
-                    var prediction1Probability = data.predictions[0].probability * 100;
-                    var prediction2Probability = data.predictions[1].probability * 100;
+                        var prediction1Name = data.predictions[0].tagName;
+                        var prediction2Name = data.predictions[1].tagName;
 
-                    if(prediction1Probability > 0.50 && prediction1Name === "ChristmasTree")
-                    {                    
-                        $('#isChristmasTree').html('IsChristmasTree! (' + prediction1Probability.toFixed(2) + '%)').fadeIn();
-                    }
-                    else{
-                        $('#isRegularTree').html('IsRegularTree! (' + prediction1Probability.toFixed(2) + '%)').fadeIn();
-                    }
-                })
-                .fail(function() {
-                    alert("error");
-                });
+                        var prediction1Probability = data.predictions[0].probability * 100;
+                        var prediction2Probability = data.predictions[1].probability * 100;
+
+                        if (prediction1Probability > 0.50 && prediction1Name === "ChristmasTree") {
+                            $('#isChristmasTree').html('IsChristmasTree! (' + prediction1Probability.toFixed(2) + '%)').fadeIn();
+                        }
+                        else {
+                            $('#isRegularTree').html('IsRegularTree! (' + prediction1Probability.toFixed(2) + '%)').fadeIn();
+                        }
+                    })
+                    .fail(function () {
+                        alert("error");
+                    });
             };
 
             reader.readAsDataURL(input.files[0]);
